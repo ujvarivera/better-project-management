@@ -3,6 +3,7 @@ import { auth } from '../firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import SignOut from './SignOut';
 import { Link } from 'react-router-dom';
+import { Chat } from './Chat';
 
 const Home = () => {
     const [user, loading, error] = useAuthState(auth);
@@ -12,7 +13,10 @@ const Home = () => {
             <p>{user?.email}</p>
             {
                 user?.email ?
-                    <SignOut /> :
+                    <>
+                        <SignOut />
+                        <Chat />
+                    </> :
                     <>
                         <Link to='/register'>Register</Link>
                         <Link to='/login'>Login</Link>
