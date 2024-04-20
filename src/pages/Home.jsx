@@ -1,6 +1,7 @@
 import React from 'react'
 import { auth } from '../firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import CreateProject from '../components/CreateProject';
 
 const Home = () => {
     const [user, loading, error] = useAuthState(auth);
@@ -12,6 +13,7 @@ const Home = () => {
     return (
         <div>
             <p>{user?.email}</p>
+            <CreateProject />
         </div>
     )
 }
