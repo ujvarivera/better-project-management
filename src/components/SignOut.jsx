@@ -1,8 +1,10 @@
 import { useSignOut } from 'react-firebase-hooks/auth';
 import { auth } from '../firebase';
+import { useNavigate } from 'react-router-dom';
 
 const SignOut = () => {
   const [signOut, loading, error] = useSignOut(auth);
+  const navigate = useNavigate();
 
   if (error) {
     return (
@@ -15,12 +17,11 @@ const SignOut = () => {
     return <p>Loading...</p>;
   }
   return (
-    <div className="App">
-      <button
-        onClick={async () => {
+    <div className="sign-out-button">
+      <button onClick={async () => {
           const success = await signOut();
           if (success) {
-            alert('You are sign out');
+            navigate('/login')
           }
         }}
       >
