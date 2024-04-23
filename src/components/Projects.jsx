@@ -1,24 +1,26 @@
-import { collection, getDocs, query } from 'firebase/firestore';
+import { collection, getDocs, onSnapshot, orderBy, query } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react'
 import { db } from '../firebase';
 
 const Projects = () => {
     const [projects, setProjects] = useState([])
+    const projectsRef = collection(db, "projects");
 
     useEffect(() => {
-        const getProjects = async () => {
-            const q = query(collection(db, 'projects'));
-
-            const querySnapshot = await getDocs(q);
-
-            const fetchedProjects = [];
-            querySnapshot.forEach((doc) => {
-                // setProjects((prev) => ([...prev, { ...doc.data(), id: doc.id }]));
-                fetchedProjects.push({...doc.data(), id: doc.id});
+        const queryProjects = query(
+            projectsRef,
+            orderBy("deadline", "asc"),
+            orderBy("priority", "asc")
+          );
+          const unsubscribe = onSnapshot(queryProjects, (snapshot) => {
+            let fetchedProjects = [];
+            snapshot.forEach((doc) => {
+              fetchedProjects.push({ ...doc.data(), id: doc.id });
             });
             setProjects(fetchedProjects);
-        }
-        getProjects()
+          });
+      
+          return () => unsubscribe();
     }, [])
 
     return (
@@ -27,7 +29,9 @@ const Projects = () => {
             {
                 projects ?
                     projects.map((project) => (
-                        <div key={project.id}>{project.name}</div>
+                        <div key={project.id}>
+                            <div>{`${project.name} - Deadline: ${project.deadline} - Prior: ${project.priority}`}</div>
+                        </div>
                     )) :
                     <div>Loading...</div>
             }
