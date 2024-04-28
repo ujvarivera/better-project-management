@@ -1,6 +1,7 @@
 import { collection, onSnapshot, orderBy, query, deleteDoc, doc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react'
 import { db } from '../firebase';
+import { Link } from 'react-router-dom';
 
 const Projects = () => {
     const [projects, setProjects] = useState([])
@@ -36,6 +37,7 @@ const Projects = () => {
                         <div key={project.id}>
                             <div>{`${project.name} - Deadline: ${project.deadline} - Prior: ${project.priority}`}
                             <button onClick={() => deleteProject(project.id)}>X</button>
+                            <Link to={`/projects/${project.id}`} state={{ projectId: project.id }}>Show more...</Link>
                             </div>
                         </div>
                     )) :
