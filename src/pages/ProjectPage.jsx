@@ -1,17 +1,25 @@
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { collection, query, where, orderBy, onSnapshot, doc, deleteDoc, getDoc, updateDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom';
 import { db } from '../firebase';
+import CreateTask from '../components/CreateTask';
 
 const ProjectPage = () => {
     const [project, setProject] = useState({})
     const [editMode, setEditMode] = useState(false)
     const { state } = useLocation();
 
+    const [tasks, setTasks] = useState([]);
+    const tasksRef = collection(db, 'tasks');
+
     const updateProject = async() => {
         await updateDoc(doc(db, 'projects', state.projectId), project)
 
         setEditMode(false)
+    }
+
+    const deleteTask = async(id) => {
+        await deleteDoc(doc(db, 'tasks', id))
     }
 
     useEffect(() => {
@@ -28,7 +36,23 @@ const ProjectPage = () => {
 
         }
         getProjectData()
+
+        const queryTasks = query(
+            tasksRef,
+            where('projectId','==',state.projectId),
+            orderBy('createdAt', 'asc')
+        );
+        const unsubscribe = onSnapshot(queryTasks, snapshot => {
+            let fetchedTasks = [];
+            snapshot.forEach(doc => {
+                fetchedTasks.push({ ...doc.data(), id: doc.id });
+            });
+            setTasks(fetchedTasks);
+        });
+
+        return () => unsubscribe();
     }, [])
+
 
     return (
         <div>
@@ -65,6 +89,22 @@ const ProjectPage = () => {
             }
             <div>
                 <h2>List of Tasks:</h2>
+
+                {tasks.length > 0 ? (
+                <ul>
+                    {tasks.map(task => (
+                        <li key={task.id}>
+                            <h3>{task.name}</h3>
+                            <p>{task.description}</p>
+                            <p>Created at: {task.createdAt.toDate().toLocaleString()}</p>
+                            <button onClick={() => deleteTask(task.id)}>X</button>
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <div>No tasks found</div>
+            )}
+            <CreateTask />
             </div>
         </div>
     )
