@@ -11,7 +11,8 @@ const CreateTask = ({ projectId }) => {
         name: '',
         description: '',
         createdAt: new Date(),
-        projectId: state.projectId
+        projectId: state.projectId,
+        isDone: false
     });
 
     const createNewTask = async () => {

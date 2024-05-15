@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom';
 import { db } from '../firebase';
 import CreateTask from '../components/CreateTask';
+import { Link } from 'react-router-dom';
 
 const ProjectPage = () => {
     const [project, setProject] = useState({})
@@ -20,6 +21,13 @@ const ProjectPage = () => {
 
     const deleteTask = async(id) => {
         await deleteDoc(doc(db, 'tasks', id))
+    }
+
+    const markasDone = async(id, isdonestate) => {
+        await updateDoc(doc(db, 'tasks', id), {
+            isDone: !isdonestate
+        })
+        
     }
 
     useEffect(() => {
@@ -98,6 +106,8 @@ const ProjectPage = () => {
                             <p>{task.description}</p>
                             <p>Created at: {task.createdAt.toDate().toLocaleString()}</p>
                             <button onClick={() => deleteTask(task.id)}>X</button>
+                            <button onClick={() => markasDone(task.id, task.isDone)}> {task.isDone? "Mark as undone": "Mark as done"}</button>
+                            <Link to={`/projects/${state.projectId}/tasks/${task.id}`} state={{projectId: project.id, projectName: project.name, taskId: task.id}}>Update</Link>
                         </li>
                     ))}
                 </ul>
