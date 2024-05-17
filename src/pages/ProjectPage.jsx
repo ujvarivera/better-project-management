@@ -107,7 +107,7 @@ const ProjectPage = () => {
                             <p>Created at: {task.createdAt.toDate().toLocaleString()}</p>
                             <button onClick={() => deleteTask(task.id)}>X</button>
                             <button onClick={() => markasDone(task.id, task.isDone)}> {task.isDone? "Mark as undone": "Mark as done"}</button>
-                            <Link to={`/projects/${state.projectId}/tasks/${task.id}`} state={{projectId: project.id, projectName: project.name, taskId: task.id}}>Update</Link>
+                            <Link to={`/projects/${state.projectId}/tasks/${task.id}`} state={{projectId: state.projectId, projectName: project.name, taskId: task.id}}>Update</Link>
                         </li>
                     ))}
                 </ul>
