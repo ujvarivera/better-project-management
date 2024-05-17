@@ -10,6 +10,8 @@ const TaskPage = () => {
     const [project, setProject] = useState({})
     const { state } = useLocation();
     const location = useLocation();
+    const [TaskError, setTaskError] = useState("");
+    const [TaskSucc, setTaskSucc] = useState("");
     const { projectId, projectName, taskId } = location.state;
 
     const taskRef = doc(db, "tasks", state.taskId);
@@ -18,7 +20,16 @@ const TaskPage = () => {
     const navigate = useNavigate();
 
     const updateTask = async() => {
-        await updateDoc(doc(db, 'tasks', taskId), task)
+        if (task.name === ""){
+            setTaskError("Task name cannot be empty")
+            return;
+        }
+        try{
+            await updateDoc(doc(db, 'tasks', taskId), task)
+            setTaskSucc("Updated successfully.")
+        }catch (error) {
+            setTaskErros(error)
+        }
 
         redirectBack();
         
@@ -101,6 +112,15 @@ const TaskPage = () => {
                         <button onClick={() => markasDone(task.isDone)}> {task.isDone? "Mark as undone": "Mark as done"}</button>
                         <Link to={`/projects/${projectId}` }state={{ projectId: projectId }}>Discard</Link>
                     </div>
+
+                    {
+                TaskError &&
+                <div className='error-message'>{TaskError}</div>
+            }
+            {
+                TaskSucc &&
+                <div className='success-message'>{TaskSucc}</div>
+            }
 
         </div>
     )
