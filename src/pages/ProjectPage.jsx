@@ -54,7 +54,7 @@ const ProjectPage = () => {
         const queryTasks = query(
             tasksRef,
             where('projectId', '==', state.projectId),
-            orderBy('createdAt', 'asc')
+            orderBy('deadline', 'asc')
         );
         const unsubscribe = onSnapshot(queryTasks, snapshot => {
             let fetchedTasks = [];
@@ -113,6 +113,7 @@ const ProjectPage = () => {
                                 <p>Created at: {task.createdAt.toDate().toLocaleString()}</p>
                                 <p>Responsible: {task.responsible}</p>
                                 <p>Status: {task.status}</p>
+                                <p>Deadline: {task.deadline}</p>
                                 {!task.isDone ?
                                     <div>
                                         <button onClick={() => deleteTask(task.id)}>Delete</button>
@@ -121,7 +122,10 @@ const ProjectPage = () => {
 
                                     </div>
                                     :
-                                    <Link to={`/projects/${state.projectId}/tasks/${task.id}`} state={{ projectId: state.projectId, projectName: project.name, taskId: task.id }}>Update</Link>
+                                    <div>
+
+                                        <Link to={`/projects/${state.projectId}/tasks/${task.id}`} state={{ projectId: state.projectId, projectName: project.name, taskId: task.id }}>Update</Link>
+                                    </div>
                                 }
 
                             </li>
