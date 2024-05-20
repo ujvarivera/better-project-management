@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
-import { auth } from '../firebase';
+import { auth, db } from '../firebase';
 import { Link, useNavigate } from 'react-router-dom';
+import { collection, addDoc } from 'firebase/firestore';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -22,9 +23,20 @@ const Register = () => {
         navigate('/')
       }
     })
+    createNewUser();
   }
 
+  const createNewUser = async () => {
+    try {
+      await addDoc(collection(db, 'users'), { email: email });
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   if (loading) {
+
     return <p>Loading...</p>;
   }
 

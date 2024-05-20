@@ -13,22 +13,27 @@ const ProjectPage = () => {
     const [tasks, setTasks] = useState([]);
     const tasksRef = collection(db, 'tasks');
 
-    const updateProject = async() => {
+    const updateProject = async () => {
         await updateDoc(doc(db, 'projects', state.projectId), project)
 
         setEditMode(false)
     }
 
-    const deleteTask = async(id) => {
+    const deleteTask = async (id) => {
         await deleteDoc(doc(db, 'tasks', id))
     }
 
-    const markasDone = async(id, isdonestate) => {
+    const markasDone = async (id, isdonestate) => {
         await updateDoc(doc(db, 'tasks', id), {
-            isDone: !isdonestate
+            isDone: !isdonestate,
+            status: "Closed"
         })
-        
+
     }
+
+
+
+
 
     useEffect(() => {
         const getProjectData = async () => {
@@ -45,9 +50,10 @@ const ProjectPage = () => {
         }
         getProjectData()
 
+
         const queryTasks = query(
             tasksRef,
-            where('projectId','==',state.projectId),
+            where('projectId', '==', state.projectId),
             orderBy('createdAt', 'asc')
         );
         const unsubscribe = onSnapshot(queryTasks, snapshot => {
@@ -99,23 +105,34 @@ const ProjectPage = () => {
                 <h2>List of Tasks:</h2>
 
                 {tasks.length > 0 ? (
-                <ul>
-                    {tasks.map(task => (
-                        <li key={task.id}>
-                            <h3>{task.name}</h3>
-                            <p>{task.description}</p>
-                            <p>Created at: {task.createdAt.toDate().toLocaleString()}</p>
-                            <button onClick={() => deleteTask(task.id)}>X</button>
-                            <button onClick={() => markasDone(task.id, task.isDone)}> {task.isDone? "Mark as undone": "Mark as done"}</button>
-                            <Link to={`/projects/${state.projectId}/tasks/${task.id}`} state={{projectId: state.projectId, projectName: project.name, taskId: task.id}}>Update</Link>
-                        </li>
-                    ))}
-                </ul>
-            ) : (
-                <div>No tasks found</div>
-            )}
-            <CreateTask />
+                    <ul>
+                        {tasks.map(task => (
+                            <li key={task.id}>
+                                <h3>{task.name}</h3>
+                                <p>{task.description}</p>
+                                <p>Created at: {task.createdAt.toDate().toLocaleString()}</p>
+                                <p>Responsible: {task.responsible}</p>
+                                <p>Status: {task.status}</p>
+                                {!task.isDone ?
+                                    <div>
+                                        <button onClick={() => deleteTask(task.id)}>Delete</button>
+                                        <button onClick={() => markasDone(task.id, task.isDone)}>Finish task</button>
+                                        <Link to={`/projects/${state.projectId}/tasks/${task.id}`} state={{ projectId: state.projectId, projectName: project.name, taskId: task.id }}>Update</Link>
+
+                                    </div>
+                                    :
+                                    <Link to={`/projects/${state.projectId}/tasks/${task.id}`} state={{ projectId: state.projectId, projectName: project.name, taskId: task.id }}>Update</Link>
+                                }
+
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <div>No tasks found</div>
+                )}
+                <CreateTask />
             </div>
+
         </div>
     )
 }
