@@ -119,18 +119,21 @@ const TaskPage = () => {
 
                 {!task.isDone ?
                     <div>
-
+                        <label htmlFor="taskName">Title:</label>
                         <input
                             value={task.name}
                             id="taskName"
                             onChange={(e) => setTask({ ...task, name: e.target.value })}
                         />
+                        <br />
+                        <label htmlFor="description">Descirption:</label>
                         <input
                             value={task.description}
                             id="description"
                             onChange={(e) => setTask({ ...task, description: e.target.value })}
                         />
-
+                        <br />
+                        <label htmlFor="sResp">Responsible user:</label>
                         <select name="sResp" id="sResp" defaultValue={task.responsible}
                             onChange={(e) => setTask({ ...task, responsible: e.target.value })}>
                             <option value="" disabled>Select a user</option>
@@ -140,13 +143,18 @@ const TaskPage = () => {
                                 </option>
                             ))}
                         </select>
+                        <br />
+                        <label htmlFor="selectedStatus">Status:</label>
                         <select name="selectedStatus" id="selectedStatus" value={task.status}
                             onChange={(e) => setTask({ ...task, status: e.target.value })}>
                             <option value="Open">Open</option>
                             <option value="In progress">In progress</option>
                             <option value="Closed">Closed</option>
                         </select>
-
+                        <br />
+                        <label htmlFor="deadline">Deadline:</label>
+                        <input type="date" id='deadline' value={task.deadline} onChange={(e) => setTask({ ...task, deadline: e.target.value })} />
+                        <br />
                         <button onClick={updateTask}>Save</button>
                         <button onClick={() => deleteTask()}>Delete</button>
                         <button onClick={() => markasDone(task.isDone)}> Finish task</button>
