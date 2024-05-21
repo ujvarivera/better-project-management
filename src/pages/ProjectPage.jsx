@@ -31,10 +31,6 @@ const ProjectPage = () => {
 
     }
 
-
-
-
-
     useEffect(() => {
         const getProjectData = async () => {
             const projectRef = doc(db, "projects", state.projectId);
@@ -50,12 +46,12 @@ const ProjectPage = () => {
         }
         getProjectData()
 
-
         const queryTasks = query(
             tasksRef,
             where('projectId', '==', state.projectId),
             orderBy('deadline', 'asc')
         );
+
         const unsubscribe = onSnapshot(queryTasks, snapshot => {
             let fetchedTasks = [];
             snapshot.forEach(doc => {
@@ -84,6 +80,12 @@ const ProjectPage = () => {
                             id="description"
                             onChange={(e) => setProject({ ...project, description: e.target.value })}
                         />
+                        <select name="selectedStatus" id="selectedStatus" value={project.status}
+                            onChange={(e) => setProject({ ...project, status: e.target.value })}>
+                            <option value="Open">Open</option>
+                            <option value="In progress">In progress</option>
+                            <option value="Closed">Closed</option>
+                        </select>
                         <input type="date" id='deadline' value={project.deadline} onChange={(e) => setProject({ ...project, deadline: e.target.value })} />
                         <select name="selectedPriority" id="selectedPriority" value={project.priority}
                             onChange={(e) => setProject({ ...project, priority: e.target.value })}>
@@ -98,6 +100,7 @@ const ProjectPage = () => {
                         <p>{project.description}</p>
                         <p>Deadline: {project.deadline}</p>
                         <p>Priority: {project.priority}</p>
+                        <p>Status: {project.status}</p>
                         <button onClick={() => setEditMode(true)}>Edit Project</button>
                     </div>
             }
@@ -119,11 +122,9 @@ const ProjectPage = () => {
                                         <button onClick={() => deleteTask(task.id)}>Delete</button>
                                         <button onClick={() => markasDone(task.id, task.isDone)}>Finish task</button>
                                         <Link to={`/projects/${state.projectId}/tasks/${task.id}`} state={{ projectId: state.projectId, projectName: project.name, taskId: task.id }}>Update</Link>
-
                                     </div>
                                     :
                                     <div>
-
                                         <Link to={`/projects/${state.projectId}/tasks/${task.id}`} state={{ projectId: state.projectId, projectName: project.name, taskId: task.id }}>Update</Link>
                                     </div>
                                 }

@@ -43,6 +43,17 @@ const CreateTask = ({ projectId }) => {
             await addDoc(collection(db, 'tasks'), newTask);
             setTaskSucc("New task added successfully.");
 
+            setNewTask({
+                name: '',
+                description: '',
+                createdAt: new Date(),
+                projectId: state.projectId,
+                isDone: false,
+                responsible: '',
+                status: 'Open',
+                deadline: null
+            })
+
         } catch (error) {
             setTaskErros(error)
         }
@@ -79,7 +90,7 @@ const CreateTask = ({ projectId }) => {
 
     return (
         <div>
-            <h2>Create New Task</h2>
+            <h2>Add New Task for this Project</h2>
             <div>
                 <label htmlFor="taskName">Name:</label>
                 <input

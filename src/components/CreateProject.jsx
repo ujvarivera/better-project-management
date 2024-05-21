@@ -8,6 +8,7 @@ const CreateProject = () => {
     const [project, setProject] = useState({ name: "", description: "" })
     const [selectedPriority, setSelectedPriority] = useState(1)
     const [deadline, setDeadLine] = useState("")
+    const [status, setStatus] = useState("Open")
     const [projectError, setProjectError] = useState("")
     const [success, setSuccess] = useState(false)
     const [user, loading, error] = useAuthState(auth);
@@ -31,6 +32,7 @@ const CreateProject = () => {
             description: project.description,
             priority: selectedPriority,
             deadline: deadline,
+            status: status,
             createdAt: serverTimestamp(),
         }).then(function () {
             setProject({ name: "", description: "" })
