@@ -12,7 +12,7 @@ const Navbar = () => {
     }
 
     return (
-        <nav className='bg-green-800 flex flex-row justify-between pl-10 pr-10 text-white text-2xl p-2 mb-3'>
+        <nav className='bg-purple-600 flex flex-row justify-between pl-10 pr-10 text-white text-2xl p-2 mb-3'>
             <Link to="/" className='hover:bg-green-600 rounded-full p-2 hover:underline'>Better Project Management</Link>
                 {
                     user ?

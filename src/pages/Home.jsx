@@ -13,7 +13,7 @@ const Home = () => {
 
     return (
         <div className="flex flex-col gap-3 h-full">
-            <p className="bg-green-600 text-white rounded-full p-2 text-sm">Signed in as: {user?.email}</p>
+            <p className="bg-blue-950 text-white rounded-full p-2 text-sm border-4 border-blue-800">Signed in as: {user?.email}</p>
             <CreateProject />
             <Projects />
         </div>
