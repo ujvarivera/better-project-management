@@ -51,8 +51,8 @@ const CreateProject = () => {
     }
 
     return (
-        <div>
-            <h2>New Project:</h2>
+        <div className="bg-green-600 text-white rounded-2xl p-2">
+            <h2 className="font-bold underline">New Project:</h2>
 
             <label for="projectName">Project's name:</label>
             <input

@@ -12,8 +12,8 @@ const Home = () => {
     }
 
     return (
-        <div>
-            <p>{user?.email}</p>
+        <div className="flex flex-col gap-3 h-full">
+            <p className="bg-green-600 text-white rounded-full p-2 text-sm">Signed in as: {user?.email}</p>
             <CreateProject />
             <Projects />
         </div>
