@@ -16,15 +16,15 @@ const Navbar = () => {
             <Link to="/" className='hover:bg-purple-400 rounded-full p-2 hover:underline'>Better Project Management</Link>
                 {
                     user ?
-                        <>
+                        <div className="flex flex-row items-center justify-center">
                             <Link to="/chats" className='hover:bg-purple-400 rounded-full p-2 hover:underline'>Chat</Link>
                             <SignOut />
-                        </>
+                        </div>
                         :
-                        <>
+                        <div className="flex flex-row items-center justify-center">
                             <Link to='/register' className='hover:bg-green-600 rounded-full p-2 hover:underline'>Register</Link>
                             <Link to='/login' className='hover:bg-green-600 rounded-full p-2 hover:underline'>Login</Link>
-                        </>
+                        </div>
                 }
         </nav>
     )

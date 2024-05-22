@@ -57,12 +57,17 @@ export const Chat = () => {
                   {messages.map((message) => (
                       <div
                           key={message.id}
-                          className={`message gap-1 flex items-center p-2 rounded-lg ${
+                          className={`message gap-1 flex items-center p-2 rounded-lg border-blue-800/20 border-2 ${
                               message.user === user.email ? "bg-blue-100 justify-end" : "bg-gray-100"
                           }`}
                       >
-                        <span className={`user text-xs font-medium ${message.user === user.email ? "hidden" : "text-gray-700"}`}>{message.user}:</span>
-                        <span className={`text-sm ${message.user === user.email ? "text-blue-700" : "text-gray-700"}`}> {message.text}</span>
+                        <div className="flex flex-col">
+                          <span
+                              className={`text-md ${message.user === user.email ? "text-blue-900" : "text-gray-700"}`}> {message.text}</span>
+                          <span
+                              className={`user text-xs font-medium ${message.user === user.email ? "hidden" : "text-gray-700"}`}>{message.user}:</span>
+
+                        </div>
                       </div>
                   ))}
                 </div>
@@ -74,7 +79,7 @@ export const Chat = () => {
                       className="new-message-input flex-1 mr-4"
                       placeholder="Type your message here..."
                   />
-                  <button type="submit" className="send-button bg-blue-500 hover:bg-blue-600 text-white font-medium py-1 px-4 rounded">
+                  <button type="submit" className="bg-purple-600 send-button bg-blue-500 hover:bg-blue-600 text-white font-medium py-1 px-4 rounded">
                     Send
                   </button>
                 </form>
