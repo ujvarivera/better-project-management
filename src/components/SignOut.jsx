@@ -18,7 +18,7 @@ const SignOut = () => {
   }
   return (
     <div className="">
-      <button className="hover:bg-green-600 rounded-full p-2 hover:underline" onClick={async () => {
+      <button className="hover:bg-purple-400 rounded-full p-2 hover:underline" onClick={async () => {
           const success = await signOut();
           if (success) {
             navigate('/login')

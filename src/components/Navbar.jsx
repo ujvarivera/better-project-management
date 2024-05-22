@@ -13,11 +13,11 @@ const Navbar = () => {
 
     return (
         <nav className='bg-purple-600 flex flex-row justify-between pl-10 pr-10 text-white text-2xl p-2 mb-3'>
-            <Link to="/" className='hover:bg-green-600 rounded-full p-2 hover:underline'>Better Project Management</Link>
+            <Link to="/" className='hover:bg-purple-400 rounded-full p-2 hover:underline'>Better Project Management</Link>
                 {
                     user ?
                         <>
-                            <Link to="/chats" className='hover:bg-green-600 rounded-full p-2 hover:underline'>Chat</Link>
+                            <Link to="/chats" className='hover:bg-purple-400 rounded-full p-2 hover:underline'>Chat</Link>
                             <SignOut />
                         </>
                         :
