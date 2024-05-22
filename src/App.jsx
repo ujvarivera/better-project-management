@@ -9,7 +9,7 @@ import Navbar from './components/Navbar';
 
 function App() {
   return (
-    <>
+    <div className="overflow-hidden">
       <BrowserRouter>
         <Navbar />
         <Routes>
@@ -21,7 +21,7 @@ function App() {
             <Route exact path="/projects/:projectId/tasks/:taskId" element={<TaskPage />} />
         </Routes>
       </BrowserRouter>
-    </>
+    </div>
 
   )
 }
