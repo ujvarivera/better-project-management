@@ -1,9 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-#root {
-  @apply h-screen;
-}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -72,7 +70,20 @@
   * {
     @apply border-border;
   }
+  html, body {
+    @apply h-full m-0 p-0;
+  }
   body {
-    @apply bg-background text-foreground h-screen w-screen;
+    @apply bg-background text-foreground flex flex-col;
+  }
+  #root {
+    @apply flex-1 flex flex-col max-h-screen;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
   }
 }

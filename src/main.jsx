@@ -4,10 +4,8 @@ import App from './App.jsx'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <div className="h-full">
       <React.StrictMode>
           <App />
       </React.StrictMode>,
-  </div>
 
 )
