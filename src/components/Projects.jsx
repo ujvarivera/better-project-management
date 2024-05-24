@@ -2,7 +2,6 @@ import { collection, onSnapshot, orderBy, query, deleteDoc, doc } from 'firebase
 import React, { useEffect, useState } from 'react';
 import { db } from '../firebase';
 import { Link } from 'react-router-dom';
-import {Button} from "@/components/ui/button.jsx";
 
 const Projects = () => {
     const [projects, setProjects] = useState([]);
@@ -30,30 +29,41 @@ const Projects = () => {
     }, []);
 
     return (
-        <div className="p-3 bg-blue-950 rounded-xl border-4 border-blue-800">
-            <h2 className="text-2xl font-bold text-white ">Projects</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
-                {
-                    projects ?
+        <div className="flex flex-col p-3 bg-blue-950 rounded-xl border-4 border-blue-800 h-full">
+            <div className="sticky top-0 bg-blue-950 z-10">
+                <h2 className="text-2xl font-bold text-white">Projects</h2>
+            </div>
+            <div className="mt-4 flex-1 overflow-y-auto scrollbar-hide">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {projects.length > 0 ? (
                         projects.map((project) => (
                             <div key={project.id} className="bg-purple-600 p-4 rounded-xl text-white">
                                 <h3 className="text-xl font-bold">{project.name}</h3>
-                                <hr className="my-2 border-white w-full"/>
+                                <hr className="my-2 border-white w-full" />
                                 <p>Status: {project.status}</p>
                                 <p>Deadline: {project.deadline}</p>
                                 <p>Priority: {project.priority}</p>
                                 <div className="flex justify-between items-center mt-4">
-                                    <button className="rounded-full text-white p-2 hover:bg-blue-200 hover:text-black"
-                                            onClick={() => deleteProject(project.id)}>Delete
+                                    <button
+                                        className="rounded-full text-white p-2 hover:bg-blue-200 hover:text-black"
+                                        onClick={() => deleteProject(project.id)}
+                                    >
+                                        Delete
                                     </button>
-                                    <Link className="text-white hover:underline" to={`/projects/${project.id}`}
-                                          state={{projectId: project.id}}>Show more...</Link>
+                                    <Link
+                                        className="text-white hover:underline"
+                                        to={`/projects/${project.id}`}
+                                        state={{ projectId: project.id }}
+                                    >
+                                        Show more...
+                                    </Link>
                                 </div>
-
                             </div>
-                        )) :
-                        <div>Loading...</div>
-                }
+                        ))
+                    ) : (
+                        <div className="text-white">Loading...</div>
+                    )}
+                </div>
             </div>
         </div>
     );
