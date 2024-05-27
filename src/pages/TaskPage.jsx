@@ -1,13 +1,11 @@
-import { collection, query, where, orderBy, onSnapshot, doc, deleteDoc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
-import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom';
+import { collection, getDocs, doc, getDoc, deleteDoc, updateDoc } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { db } from '../firebase';
-import CreateTask from '../components/CreateTask';
-import { Link, useNavigate } from 'react-router-dom';
 
 const TaskPage = () => {
-    const [task, setTask] = useState({})
-    const [project, setProject] = useState({})
+    const [task, setTask] = useState({});
+    const [project, setProject] = useState({});
     const { state } = useLocation();
     const location = useLocation();
     const [TaskError, setTaskError] = useState("");
@@ -15,31 +13,25 @@ const TaskPage = () => {
     const { projectId, projectName, taskId } = location.state;
 
     const [users, setUsers] = useState([]);
-
-    const taskRef = doc(db, "tasks", state.taskId);
-
-    //const tasksRef = collection(db, 'tasks');
     const navigate = useNavigate();
 
     const updateTask = async () => {
+        setTaskError("");
         if (task.name === "") {
-            setTaskError("Task name cannot be empty")
+            setTaskError("Task name cannot be empty");
             return;
         }
         if (task.responsible === "") {
-            setTaskError("Responsible user cannot be empty")
+            setTaskError("Responsible user cannot be empty");
             return;
         }
         try {
-            await updateDoc(doc(db, 'tasks', taskId), task)
-            setTaskSucc("Updated successfully.")
+            await updateDoc(doc(db, 'tasks', taskId), task);
+            setTaskSucc("Updated successfully.");
         } catch (error) {
-            setTaskErros(error)
+            setTaskError(error.message);
         }
-
-        //  redirectBack();
-
-    }
+    };
 
     const redirectBack = async () => {
         navigate(`/projects/${projectId}`, {
@@ -47,23 +39,20 @@ const TaskPage = () => {
                 projectId: projectId
             }
         });
-    }
+    };
 
     const deleteTask = async () => {
-        await deleteDoc(doc(db, 'tasks', taskId))
-
+        await deleteDoc(doc(db, 'tasks', taskId));
         redirectBack();
-    }
+    };
 
-    const markasDone = async (isdonestate) => {
+    const markAsDone = async (isDoneState) => {
         await updateDoc(doc(db, 'tasks', taskId), {
-            isDone: !isdonestate,
+            isDone: !isDoneState,
             status: "Closed"
-        })
-
+        });
         getTaskData();
-
-    }
+    };
 
     const getTaskData = async () => {
         const taskRef = doc(db, "tasks", taskId);
@@ -72,14 +61,11 @@ const TaskPage = () => {
         if (taskSnap.exists()) {
             setTask(taskSnap.data());
         } else {
-            // projectSnap.data() will be undefined in this case
-            console.log("No such Project!");
+            console.log("No such Task!");
         }
-
-    }
+    };
 
     useEffect(() => {
-
         const getProjectData = async () => {
             const projectRef = doc(db, "projects", projectId);
             const projectSnap = await getDoc(projectRef);
@@ -87,13 +73,11 @@ const TaskPage = () => {
             if (projectSnap.exists()) {
                 setProject(projectSnap.data());
             } else {
-                // projectSnap.data() will be undefined in this case
                 console.log("No such Project!");
             }
-
-        }
-        getTaskData()
-        getProjectData()
+        };
+        getTaskData();
+        getProjectData();
 
         const fetchUsers = async () => {
             try {
@@ -106,83 +90,121 @@ const TaskPage = () => {
         };
 
         fetchUsers();
-
-
-    }, [])
-
+    }, [projectId, taskId]);
 
     return (
-        <div>
-            <h1>{projectName}</h1>
-            <div>
-
-
-                {!task.isDone ?
-                    <div>
-                        <label htmlFor="taskName">Title:</label>
-                        <input
-                            value={task.name}
-                            id="taskName"
-                            onChange={(e) => setTask({ ...task, name: e.target.value })}
-                        />
-                        <br />
-                        <label htmlFor="description">Descirption:</label>
-                        <input
-                            value={task.description}
-                            id="description"
-                            onChange={(e) => setTask({ ...task, description: e.target.value })}
-                        />
-                        <br />
-                        <label htmlFor="sResp">Responsible user:</label>
-                        <select name="sResp" id="sResp" defaultValue={task.responsible}
-                            onChange={(e) => setTask({ ...task, responsible: e.target.value })}>
-                            <option value="" disabled>Select a user</option>
-                            {users.map(user => (
-                                <option key={user.id} value={user.email}>
-                                    {user.email}
-                                </option>
-                            ))}
-                        </select>
-                        <br />
-                        <label htmlFor="selectedStatus">Status:</label>
-                        <select name="selectedStatus" id="selectedStatus" value={task.status}
-                            onChange={(e) => setTask({ ...task, status: e.target.value })}>
-                            <option value="Open">Open</option>
-                            <option value="In progress">In progress</option>
-                            <option value="Closed">Closed</option>
-                        </select>
-                        <br />
-                        <label htmlFor="deadline">Deadline:</label>
-                        <input type="date" id='deadline' value={task.deadline} onChange={(e) => setTask({ ...task, deadline: e.target.value })} />
-                        <br />
-                        <button onClick={updateTask}>Save</button>
-                        <button onClick={() => deleteTask()}>Delete</button>
-                        <button onClick={() => markasDone(task.isDone)}> Finish task</button>
+        <div className="p-6 bg-blue-950 rounded-xl border-4 border-blue-800 text-white">
+            <h1 className="text-3xl font-bold mb-4">{projectName}</h1>
+            <div className="space-y-4">
+                {!task.isDone ? (
+                    <div className="space-y-4">
+                        <div>
+                            <label htmlFor="taskName" className="block text-sm font-medium">Title:</label>
+                            <input
+                                type="text"
+                                id="taskName"
+                                className="w-full p-2 rounded text-black border border-blue-600"
+                                value={task.name || ''}
+                                onChange={(e) => setTask({ ...task, name: e.target.value })}
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="description" className="block text-sm font-medium">Description:</label>
+                            <textarea
+                                id="description"
+                                className="w-full p-2 rounded text-black  border border-blue-600"
+                                value={task.description || ''}
+                                onChange={(e) => setTask({ ...task, description: e.target.value })}
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="sResp" className="block text-sm font-medium">Responsible user:</label>
+                            <select
+                                name="sResp"
+                                id="sResp"
+                                className="w-full p-2 rounded text-black  border border-blue-600"
+                                value={task.responsible || ''}
+                                onChange={(e) => setTask({ ...task, responsible: e.target.value })}
+                            >
+                                <option value="" disabled>Select a user</option>
+                                {users.map(user => (
+                                    <option key={user.id} value={user.email}>
+                                        {user.email}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div>
+                            <label htmlFor="selectedStatus" className="block text-sm font-medium">Status:</label>
+                            <select
+                                name="selectedStatus"
+                                id="selectedStatus"
+                                className="w-full p-2 rounded text-black  border border-blue-600"
+                                value={task.status || ''}
+                                onChange={(e) => setTask({ ...task, status: e.target.value })}
+                            >
+                                <option value="Open">Open</option>
+                                <option value="In progress">In progress</option>
+                                <option value="Closed">Closed</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label htmlFor="deadline" className="block text-sm font-medium">Deadline:</label>
+                            <input
+                                type="date"
+                                id="deadline"
+                                className="w-full p-2 rounded text-black  border border-blue-600"
+                                value={task.deadline || ''}
+                                onChange={(e) => setTask({ ...task, deadline: e.target.value })}
+                            />
+                        </div>
+                        <div className="space-x-2">
+                            <button
+                                className="bg-blue-600 p-2 rounded hover:bg-blue-700"
+                                onClick={updateTask}
+                            >
+                                Save
+                            </button>
+                            <button
+                                className="bg-red-600 p-2 rounded hover:bg-red-700"
+                                onClick={deleteTask}
+                            >
+                                Delete
+                            </button>
+                            <button
+                                className="bg-green-600 p-2 rounded hover:bg-green-700"
+                                onClick={() => markAsDone(task.isDone)}
+                            >
+                                Finish task
+                            </button>
+                        </div>
                     </div>
-                    :
+                ) : (
                     <div>
-                        <p>{task.name}</p>
+                        <p className="text-xl font-bold">{task.name}</p>
                         <p>{task.description}</p>
                         <p>Responsible: {task.responsible}</p>
                         <p>Status: {task.status}</p>
-                        <button onClick={() => markasDone(task.isDone)}> Unfinish task</button>
+                        <button
+                            className="bg-yellow-600 p-2 rounded hover:bg-yellow-700"
+                            onClick={() => markAsDone(task.isDone)}
+                        >
+                            Unfinish task
+                        </button>
                     </div>
-                }
-
-                <Link to={`/projects/${projectId}`} state={{ projectId: projectId }}>Back</Link>
+                )}
+                <Link
+                    to={`/projects/${projectId}`}
+                    state={{ projectId: projectId }}
+                    className="block mt-4 bg-gray-600 p-2 rounded text-center hover:bg-gray-700"
+                >
+                    Back
+                </Link>
+                {TaskError && <div className="text-red-500 mt-2">{TaskError}</div>}
+                {TaskSucc && <div className="text-green-500 mt-2">{TaskSucc}</div>}
             </div>
-
-            {
-                TaskError &&
-                <div className='error-message'>{TaskError}</div>
-            }
-            {
-                TaskSucc &&
-                <div className='success-message'>{TaskSucc}</div>
-            }
-
         </div>
-    )
-}
+    );
+};
 
-export default TaskPage
+export default TaskPage;
